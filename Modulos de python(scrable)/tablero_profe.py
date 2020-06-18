@@ -35,18 +35,19 @@ for row in range(10):
 
 # print(matriz)
 
-Check_box = lambda x, y: g.TKCanvas.itemconfig(matriz[box_y][box_x], fill="#CFF5E3")
-Uncheck_box = lambda x, y: g.TKCanvas.itemconfig(matriz[box_y][box_x], fill="white")
+Check_box = lambda x, y: g.TKCanvas.itemconfig(matriz[box_y][box_x], fill="#287db5")#cambia el canvas del tablero cuando se agrega una letra
+Uncheck_box = lambda x, y: g.TKCanvas.itemconfig(matriz[box_y][box_x], fill="white")#pinta el canvas de blanco
 despintar = lambda x: g.TKCanvas.itemconfig(x, fill="white")
 
 Check_button = lambda x: window.FindElement(x).Update(button_color=('white', 'blue'))
 Uncheck_button = lambda x: window.FindElement(x).Update(button_color=('white', 'green'))
-current_Check_button = ''
+current_Check_button = '' #boton perteneciente a la letra que se esta usando
 
 word = ''
 
 button_selected = False
 current_button_selected = ''
+#Loop infinito del juego
 while True:
     event, values = window.Read()
     print(values)
@@ -71,9 +72,9 @@ while True:
             if text_box[box_x][box_y] == "":
                 text_box[box_x][box_y] = g.DrawText(current_button_selected,
                                                     (box_x * tam_celda + 18, box_y * tam_celda + 17))
-                word += current_button_selected
+                word += current_button_selected #append de letras en word
             else:
-                # aca iria la actualizacion del cuadrado pero no me sale
+                
                 print(text_box[box_x][box_y])
                 g.TKCanvas.itemconfig(text_box[box_y][box_x], text="")
                 print((g.TKCanvas.itemconfigure(text_box[box_y][box_x])))
@@ -84,6 +85,9 @@ while True:
                 button_selected = False
                 current_button_selected = ''
         else:
-            Check_button(event)
-            button_selected = True
-            current_button_selected = event
+            if event == "Evaluar":
+                current_button_selected = ''
+            else:
+                Check_button(event)
+                button_selected = True
+                current_button_selected = event
