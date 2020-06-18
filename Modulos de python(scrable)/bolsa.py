@@ -101,20 +101,25 @@ class Bolsa:
         """Elimina una ficha de la bolsa y se lo devuelve al usuario. Esto se utiliza para reponer el estante."""
         return self.bolsa.pop()
 
+    def devolver_ficha_a_la_bolsa(self,ficha):
+        """Agrega una ficha a la bolsa"""
+        self.bolsa.append(ficha)
+        shuffle(self.bolsa)  # mezcla las fichas en la bolsa
+
     def obtener_fichas_restantes(self):
         #Devuelve el número de fichas que quedan en la bolsa.
         return len(self.bolsa)
 
 #---------------------------------SECCION DE PRUEBAS-------------------------------
-bolsa = Bolsa()
-lista_jugador =[]
-print("las fichas restantes en la bolsa son: "+str(bolsa.obtener_fichas_restantes()))
-#--------------------------SIMULACION DEL JUEGO--------------------------------------------
-print("Acontinuacion se tomaran 7 fichas")
-for i in range(7):
-    lista_jugador.append(bolsa.tomar_de_la_bolsa())
-print("se tomaron las siguientes fichas: ")
-for ficha_jugador in lista_jugador:
-    print("letra: "+ficha_jugador.get_letra()+" puntaje: "+str(ficha_jugador.get_puntaje()))
-
-print("Quedan "+str(bolsa.obtener_fichas_restantes())+" en la bolsa")
+# bolsa = Bolsa()
+# lista_jugador =[]
+# print("las fichas restantes en la bolsa son: "+str(bolsa.obtener_fichas_restantes()))
+# #--------------------------SIMULACION DEL JUEGO--------------------------------------------
+# print("Acontinuacion se tomaran 7 fichas")
+# for i in range(7):
+#     lista_jugador.append(bolsa.tomar_de_la_bolsa())
+# print("se tomaron las siguientes fichas: ")
+# for ficha_jugador in lista_jugador:
+#     print("letra: "+ficha_jugador.get_letra()+" puntaje: "+str(ficha_jugador.get_puntaje()))
+#
+# print("Quedan "+str(bolsa.obtener_fichas_restantes())+" en la bolsa")
