@@ -1,5 +1,6 @@
 import PySimpleGUI as sg
 class Tablero:
+    tam_celda=0
     matriz = []
     selected = []
     text_box = []
@@ -11,6 +12,7 @@ class Tablero:
     casillas_letra_resto1=[]
     casillas_letra_resto2=[]
     casillas_letra_resto3=[]
+    tablero = None
     diccionario_colores={"Rojo":"#ea3232","Azul":"#4b7eea","Verde":"#50ea4b","Amarillo":"#fdf658","Rosado":"#fd73f0","Naranja":"#fb981e","Marron":"#b46708"}
     def botonConfig(self, texto):
         #funciona
@@ -32,6 +34,7 @@ class Tablero:
             self.selected.append([False] * 15)
             self.text_box.append([""] * 15)
             self.matriz_puntaje.append([""] * 15)
+            self.tam_celda = 25
     def coordenadasColor(self):
         #(x,y)
         self.casillas_palabra_x3=[(0,0), (0,7), (0,14), (7,0), (7,7), (7,14), (14,0), (14,7), (14,14)] #Rojo- Palabrax3
@@ -43,7 +46,6 @@ class Tablero:
         self.casillas_letra_resto3=[(5,5), (5,9), (9,5), (9,9)] #Marron - Resto3
     def dibujarTablero(self, matriz,lista_letras):
         self.initVariables()
-        tam_celda = 25
         colorear_canvas= lambda x, y, z: g.TKCanvas.itemconfig(self.matriz[x][y], fill=z) #Azul - Palabrax2
         """
         puntaje_palabra_x3 = lambda x, y, z: g.TKCanvas.itemconfig(self.matriz[x][y], fill="#ea3232") #Rojo- Palabrax3
@@ -65,45 +67,72 @@ class Tablero:
         for row in range(15):
             for col in range(15):
                 #event, values = window.Read()
-                matriz[row][col] = g.DrawRectangle((row * tam_celda + 5, col * tam_celda + 5), (row * tam_celda + tam_celda + 5, col * tam_celda + tam_celda + 5), line_color='black')
+                matriz[row][col] = g.DrawRectangle((row * self.tam_celda + 5, col * self.tam_celda + 5), (row * self.tam_celda + self.tam_celda + 5, col * self.tam_celda + self.tam_celda + 5), line_color='black')
                 tupla=(row,col)
-                if tupla == (2,8):
-                    print("hallo")
                 if (tupla in self.casillas_palabra_x2):
                     colorear_canvas(row,col, self.diccionario_colores["Azul"]) #Pinta Azul
+                    g.DrawText("Px2", (row * self.tam_celda+12, col * self.tam_celda+10))
                     self.matriz_puntaje[row][col]="Px2"   
                 elif (tupla in self.casillas_palabra_x3):
                     colorear_canvas(row,col,self.diccionario_colores["Rojo"]) #Pinta Rojo
+                    g.DrawText("Px3", (row * self.tam_celda+12, col * self.tam_celda+10))
                     self.matriz_puntaje[row][col]="Px3"   
                 elif (tupla in self.casillas_letra_x2):
                     colorear_canvas(row,col, self.diccionario_colores["Verde"]) #Pinta Verde
+                    g.DrawText("Lx2", (row * self.tam_celda+12, col * self.tam_celda+10))
                     self.matriz_puntaje[row][col]="Lx2" 
                 elif (tupla in self.casillas_letra_x3):
                     colorear_canvas(row,col, self.diccionario_colores["Amarillo"]) #Pinta Amarillo
+                    g.DrawText("Lx3", (row * self.tam_celda+12, col * self.tam_celda+10))
                     self.matriz_puntaje[row][col]="Lx3" 
                 elif (tupla in self.casillas_letra_resto1):
                     colorear_canvas(row,col, self.diccionario_colores["Rosado"]) #Pinta Rosado
+                    g.DrawText("P-1", (row * self.tam_celda+12, col * self.tam_celda+10))
                     self.matriz_puntaje[row][col]="P-1"
                 elif (tupla in self.casillas_letra_resto2):
                     colorear_canvas(row,col,self.diccionario_colores["Naranja"]) #Pinta Naranja
+                    g.DrawText("P-2", (row * self.tam_celda+12, col * self.tam_celda+10))
                     self.matriz_puntaje[row][col]="P-2"
-                    print (self.matriz[row][col])
                 elif (tupla in self.casillas_letra_resto3):
                     colorear_canvas(row,col, self.diccionario_colores["Marron"]) #Pinta Marron
+                    g.DrawText("P-3", (row * self.tam_celda+12, col * self.tam_celda+10))
                     self.matriz_puntaje[row][col]="P-3"
-        #puntaje_palabra_resto2(8,2) #Preguntar // Comentar para probar
-        #puntaje_letra_x2(6,8)       #Preguntar // Comentar para probar
-        event, values = window.Read()
-        if event == '_GRAPH_':   
-            mouse = values["_GRAPH_"]
-            box_x = mouse[0] // tam_celda
-            box_y = mouse[1] // tam_celda
-        print ("Posicion x={} e y={}".format(box_x, box_y))
-        print(self.matriz_puntaje[2][8])
-        window.close() 
+        self.tablero=window
+
+    def dibujarLetra(self, coord_x, coord_y, letra):
+        g=self.tablero.FindElement('_GRAPH_')
+        box_x = coord_x #// self.tam_celda
+        box_y = coord_y #// self.tam_celda
+        if box_x < 15 or box_y < 15:
+            if (self.selected[box_x][box_y] == False):   
+                self.selected[box_x][box_y] = True
+                self.text_box[box_x][box_y] = letra
+                g.DrawText(letra, (box_x * self.tam_celda + 17, box_y * self.tam_celda + 17))
+            else:
+                print ("Ya se escribio en esa casilla")
+        event=self.tablero.Read()
+
+    def marcarLetra(self, letra):
+        self.tablero.FindElement(letra).Update(button_color=('white', 'blue'))
+        event=self.tablero.Read()
+        
+    def desmarcarLetra(self, letra):
+        self.tablero.FindElement(letra).Update(button_color=('white', 'green'))
+        event=self.tablero.Read()
+        
+        
+        
+
 tablero = Tablero()
 lista_letras=["A","E","I","O","U"]
 tablero.dibujarTablero(tablero.matriz,lista_letras)
+tablero.dibujarLetra(0,0, "O")
+tablero.dibujarLetra(0,0, "A")
+tablero.marcarLetra("A")
+tablero.desmarcarLetra("A")
+
+
+
 
 """
 layout=[[tablero.botonConfig("carlos")]]
