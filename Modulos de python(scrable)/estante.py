@@ -1,4 +1,4 @@
-from Modulos_python_scrabble.fichas import Ficha
+from fichas import Ficha
 
 class Estante:
     """ Crea la "mano" de cada jugador. Permite a los jugadores agregar, eliminar y reponer el número de fichas en su
@@ -58,7 +58,8 @@ class Estante:
             self.agregar_a_la_mano()
 
 # ---------------------------------SECCION DE PRUEBAS-------------------------------
-from Modulos_python_scrabble.bolsa import Bolsa
+"""
+from bolsa import Bolsa
 import random
 
 estante = Estante(Bolsa())
@@ -81,6 +82,7 @@ estante.cambiar_ficha(aux_ficha)
 #     aux_ficha = random.choice(estante.get_mano_arr())
 #     print(aux_ficha.get_letra())
 #     estante.quitar_ficha_de_la_mano(aux_ficha)
-print("cantidad de fichas en mano despues de jugar: " + str(estante.get_mano_longitud()))
-print("esta es la mano actual del jugador ")
-print(estante.get_mano_str())
+#print("cantidad de fichas en mano despues de jugar: " + str(estante.get_mano_longitud()))
+#print("esta es la mano actual del jugador ")
+#print(estante.get_mano_str())
+"""

@@ -1,5 +1,5 @@
-from Modulos_python_scrabble.estante import Estante
-from Modulos_python_scrabble.bolsa2 import Bolsa
+from estante import Estante
+from bolsa import Bolsa
 
 
 class Jugador:

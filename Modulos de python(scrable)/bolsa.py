@@ -7,7 +7,7 @@ Bolsa2 - realiza un seguimiento de las fichas restantes en la bolsa
 Palabras - comprueba la validez de una palabra y su ubicación
 Tablero - realiza un seguimiento de la ubicación de las fichas en el tablero
 """
-from Modulos_python_scrabble.fichas import Ficha
+from fichas import Ficha
 from random import shuffle
 #Realiza un seguimiento de la puntuación de cada Ficha de letras Y la cantidad.
 LETRAS_CANTIDAD = {"A": 12,
@@ -88,8 +88,8 @@ class Bolsa:
 
     def inicializar_bolsa(self):
         """Agrega una cierta cantidad de una ficha a la bolsa. Toma una ficha y una cantidad entera como argumentos."""
-        global lETRAS_CANTIDAD
-        global lETRAS_PUNTAJE
+        global LETRAS_CANTIDAD
+        global LETRAS_PUNTAJE
         for letra in LETRAS_PUNTAJE.keys():
             #parametros (LETRA ,   DICCIONARIO CON PUNTAJE ,   CANTIDAD DE FICHAS PARA ESA LETRA)
             self.agregar_a_la_bolsa(Ficha(letra,LETRAS_PUNTAJE),LETRAS_CANTIDAD[letra])
@@ -109,17 +109,18 @@ class Bolsa:
     def obtener_fichas_restantes(self):
         #Devuelve el número de fichas que quedan en la bolsa.
         return len(self.bolsa)
-
+"""
 #---------------------------------SECCION DE PRUEBAS-------------------------------
-# bolsa = Bolsa()
-# lista_jugador =[]
-# print("las fichas restantes en la bolsa son: "+str(bolsa.obtener_fichas_restantes()))
-# #--------------------------SIMULACION DEL JUEGO--------------------------------------------
-# print("Acontinuacion se tomaran 7 fichas")
-# for i in range(7):
-#     lista_jugador.append(bolsa.tomar_de_la_bolsa())
-# print("se tomaron las siguientes fichas: ")
-# for ficha_jugador in lista_jugador:
-#     print("letra: "+ficha_jugador.get_letra()+" puntaje: "+str(ficha_jugador.get_puntaje()))
-#
-# print("Quedan "+str(bolsa.obtener_fichas_restantes())+" en la bolsa")
+bolsa = Bolsa()
+lista_jugador =[]
+print("las fichas restantes en la bolsa son: "+str(bolsa.obtener_fichas_restantes()))
+#--------------------------SIMULACION DEL JUEGO--------------------------------------------
+print("Acontinuacion se tomaran 7 fichas")
+for i in range(7):
+    lista_jugador.append(bolsa.tomar_de_la_bolsa())
+print("se tomaron las siguientes fichas: ")
+for ficha_jugador in lista_jugador:
+    print("letra: "+ficha_jugador.get_letra()+" puntaje: "+str(ficha_jugador.get_puntaje()))
+
+print("Quedan {} en la bolsa".format(bolsa.obtener_fichas_restantes()))
+"""
