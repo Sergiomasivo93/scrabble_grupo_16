@@ -23,6 +23,13 @@ class Estante:
         """Muestra el estante del usuario en forma de cadena."""
         return ", ".join(str(ficha.get_letra()) for ficha in self.mano)
 
+    def get_mano_list_letras(self):
+        """Muestra el estante del usuario en forma de cadena."""
+        return [ficha.get_letra() for ficha in self.mano]
+
+    def get_mano_ficha(self, num):
+        return self.mano[num]
+
     def get_mano_arr(self):
         """Devuelve la mano como un arreglo de instancias de ficha"""
         return self.mano
