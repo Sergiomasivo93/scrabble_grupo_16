@@ -31,7 +31,7 @@ class Juego:
 
     #def turnoMaquinaTerminator(self):
         #roboinicial
-        #logica de la maquina (la ia)
+        #logica de la maquina (la IA)
 juego=Juego()
 juego.initContexto()
 print(juego.jugador.get_estante().get_mano_arr().pop().get_letra())
