@@ -1,74 +1,95 @@
 import PySimpleGUI as sg
-import datetime
-import time
 
-sg.change_look_and_feel('Black')
+class Reloj():
+    sg.change_look_and_feel('Black')
+    counter = 0
+    seg=0
+    ts = True
+    tm = True
+    fin=True
+    conts = 0
+    contm = 0
+    una = 1
+    def dameLayout(self):
+        layout = [
+            [sg.Text(' ', size=(8, 2), font=('Helvetica', 20), justification='center', key='reloj')],#pad=(215, 0))],
+            [sg.Text(size=(15,1), key='-OUTPUT-')] ]
 
-layout = [
-    [sg.Text('', size=(8, 2), font=('Helvetica', 20), justification='center', key='-OUTPUT-')],
-    [sg.Button('Pausa', key='button', button_color=('white', '#001480')),
-     sg.Button('Reiniciar', button_color=('white', '#007339'), key='Reiniciar'),
-     sg.Exit(button_color=('white', 'firebrick4'), key='Exit')]
-]
+        return layout;
 
-window = sg.Window('Window that stays open').layout(layout)
+    def darSegundo(self):
 
-# ------------------------------VARIABLES GLOBALES-------------------------------------------------------------
+        if((self.counter // 100) % 60==30):
+            self.conts+=1
+        if(self.conts==1):
+            self.ts=False
+            return 30
+        return 0
+    #def TurnoDeComputadora(self): # el turno es de 30 segundos para el usuario
+       # seg = r.darSegundo();
+        #if( (seg == 30)and (r.finJuego())):
+           # print("Es turno de la computadora")
 
-counter = 0
-minutos = 0
-segundos= 0
-mili_segundos = 0
-paused = False
-start_time = int(round(time.time() * 100))
-
-
-# ------------------------------FUNCIONES-------------------------------------------------------------
-def actualizar_tiempo():
-    global counter,minutos,segundos,mili_segundos
-    counter = int(round(time.time() * 100)) - start_time
-    minutos = (counter // 100) // 60
-    segundos = (counter // 100) % 60
-    mili_segundos = counter % 100
-    window['-OUTPUT-'].update('{:02d}:{:02d}.{:02d}'.format(minutos,segundos,mili_segundos))
+    def darMinuto(self):
+        if(((self.counter // 100) // 60)==1):
+            self.contm += 1
+        if (self.contm == 1 and self.tm == True):
+            self.tm = False
+            return 1
+        return 0
 
 
-# ------------------------------PRUEBAS---------------------------------------------------------------
+    def finJuego(self): # Termina el juego cuando pasa 1 minuto
+        min = self.darMinuto();
+        if (min == 1):
+            print("Fin del juego")
+            return False
+        else:
+            return True
 
-while True:
+# Esto lo haria en el tablero_fran
 
-    # --------- Leer y actualizar la ventana --------
-    if not paused:
-        event, values = window.read(timeout=10)
-        actualizar_tiempo()
-    else:
-        event, values = window.read()
-    if event == 'button':
-        event = window[event].GetText()
 
-    # --------- Hacer operaciones de botones --------
-    if event == sg.WIN_CLOSED or event == 'Exit':  # ALWAYS give a way out of program
-        break
-    if event is 'Reiniciar':
-        start_time = int(round(time.time() * 100))
-        counter = 0
-        paused_time = start_time
-        actualizar_tiempo()
-    elif event == 'Pausa':
-        paused = True
-        paused_time = int(round(time.time() * 100))
-        element = window['button']
-        element.update(text='Continuar')
-    elif event == 'Continuar':
-        paused = False
-        start_time = start_time + int(round(time.time() * 100)) - paused_time
-        element = window['button']
-        element.update(text='Pausa')
-    # --------- condicion para cortar el timer --------
-    elif segundos == 5:
-        paused = True
-        paused_time = int(round(time.time() * 100))
-        element = window['button']
-        element.update(text='Continuar')
+
+
+
+"""
+
+r=Reloj()
+window = sg.Window('Window that stays open').layout(r.dameLayout())
+
+
+
+while True:      
+    event, values = window.read(timeout=10)
+    # acualizar tiempo
+    FinJuego=r.finJuego()
+    if(FinJuego==True):
+        #if(r.una==0):
+         #   print("Hola")
+        print("hola")
+        if(r.una==1):
+            window['reloj'].update(
+            '{:02d}:{:02d}.{:02d}'.format((r.counter // 100) // 60, (r.counter // 100) % 60, r.counter % 100))
+            print("chau")
+    if (FinJuego == False):
+        #print("entre al else")
+        r.una = 0;
+        window['reloj'].update(
+        '01:00:00')
+
+    r.counter += 1
+    r.TurnoDeComputadora();
+    j=FinJuego;
+
+    #min=r.darMinuto();
+    #if(min==1):
+    #    print("1")
+    if event is None or event == 'Exit':      
+        break      
 
 window.Close()
+
+
+
+"""

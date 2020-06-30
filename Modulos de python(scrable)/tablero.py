@@ -1,4 +1,5 @@
 import PySimpleGUI as sg
+from reloj import Reloj as re
 class Tablero:
     tam_celda=0
     #-------Variables para inicio y manejo del tablero-----------------------------
@@ -27,10 +28,11 @@ class Tablero:
     sentido="" #Horizontal o vertical
     listaPos=[]
     cortaTodo=False
+    r = re()
     def botonConfig(self, texto):
         #funciona
         color_button = ('white', 'green') #primer parametro:color de letra, segundo parametro: color fondo
-        tam_button = 10, 5
+        tam_button = 4, 0
         return sg.Button(texto, button_color=color_button, size=tam_button)
     def initVariables(self):
         self.tam_celda = 25
@@ -42,7 +44,7 @@ class Tablero:
     def tableroConfig(self):
         #tamaño del canvas en pixeles
         self.initVariables()
-        tamaño=(650,650) #tamaño total del canvas
+        tamaño=(550,500) #tamaño total del canvas
         esquina_inferior_izquierda=(0,385) #tamaño que depende del tamaño de celda*cantidad de celdas 
         esquina_superior_derecha=(385,0)   #tamaño que depende del tamaño de celda*cantidad de celdas
         #esquina_inferior_izquierda y esquina_superior_derecha marcan hasta donde se dibuja el tablero.
@@ -66,9 +68,44 @@ class Tablero:
         tablero=self.tableroConfig()
         self.coordenadasColor()
         #------------Esto de aca abajo seria el estante, despues ver si lo sacamos o que onda
-        layout=[[tablero],                 
-                [boton(texto) for texto in lista_letras]
-                ]
+         # FILA
+        pc = [boton(texto) for texto in lista_letras]  # estante del jugador(interfaz)
+        player = [boton(texto) for texto in lista_letras]
+        # COLUMNA
+        nombre = "NombreJugador"
+        puntaje = 10
+        label_player = sg.Text('Jugador: {}'.format(nombre), background_color="Teal", font=('Helvetica', 20),
+                               justification='center', key='text')
+        label_PuntajeJ = sg.Text('puntaje: {}'.format(puntaje), background_color="Teal",
+                                 font=('Helvetica', 20),
+                                 justification='center', key='text')
+        label_maquina = sg.Text('Maquina', background_color="Teal", font=('Helvetica', 20), justification='center',
+                                key='text')
+        label_PuntajeM = sg.Text('puntaje: {}'.format(puntaje), background_color="Teal",
+                                 font=('Helvetica', 20),
+                                 justification='center', key='text')
+        # JUNTO FILAS Y COLUMNAS
+        statecolor = ['lightgray', 'tan', 'yellow', 'lightblue', 'orange', 'limegreen', 'pink', 'red', 'darkgray']
+
+        camTurno = sg.Button('Cambiar turno', button_color=('black', statecolor[4]), key='cambiar turno',
+                             font=("Arial", 12, "bold"))
+        camFichas = sg.Button('Cambiar fichas', button_color=('black', statecolor[4]), key='cambiar fichas',
+                              font=("Arial", 12, "bold"), pad=(0, 80))
+        col22 = [camTurno, camFichas]
+        col2 = [[label_player], [label_PuntajeJ], player,col22]
+
+        guaPartida = sg.Button('Guardar partida', button_color=('black', statecolor[4]), key='Guardar partida',
+                               size=(8, 2), font=("Arial", 12, "bold"))
+        termi = sg.Button('Terminar juego', button_color=('black', statecolor[4]), key='Terminar juego', size=(8, 2),
+                          font=("Arial", 12, "bold"), pad=(50, 200))
+        col00 = [guaPartida, termi]
+        col01 = [self.r.dameLayout()[0][0], self.r.dameLayout()[1][0]]
+        
+        col0 = [[label_maquina], [label_PuntajeM], pc,col00]
+        col1= [col01,[tablero]]
+
+
+        layout = [[sg.Column(col0),sg.Column(col1) , sg.Column(col2)]]
         window = sg.Window('Ejercicio1', ).Layout(layout).Finalize()
         g = window.FindElement('_GRAPH_')
         
@@ -124,24 +161,28 @@ class Tablero:
     def esConsecutivaEnX(self, coordX, coordY, pos1erLetraX):
         ok=False
         if (coordX>self.pos1erLetraX and self.selected[coordX-1][coordY]==True):
+            #el anterior a mi izquierda tiene q estar ocupado
             ok=True
         elif (coordX<self.pos1erLetraX and self.selected[coordX+1][coordY]==True):
+            #el posterior a mi izquierda tiene q estar ocupado
             ok=True
         return ok
     def esConsecutivaEnY(self, coordX, coordY, pos1erLetraY):
         ok=False
         if (coordY>self.pos1erLetraY and self.selected[coordX][coordY-1]==True):
+            #el de arriba mio tiene q estar ocupado
             ok=True
         elif (coordY<self.pos1erLetraY and self.selected[coordX][coordY+1]==True):
+            #el de abajo mio tiene q estar ocupado
             ok=True
         return ok
 
     def validarPosicion(self,letraActual,coordX,coordY):
         ok=False
         if (coordX < 15 or coordY < 15):
-        #Primero: Tiene que estar adentro del cuadrado
+        #Primero: Tiene que estar adentro del tablero
             if (self.selected[coordX][coordY]==False):
-            #Segundo: La casilla que seleccione efectivamente no tiene que tener letras.
+            #Segundo: La casilla que seleccione efectivamente no tiene que tener letras (esta libre).
                 if (letraActual=="1erLetra"):
                     self.pos1erLetraX=coordX
                     self.pos1erLetraY=coordY
@@ -173,7 +214,7 @@ class Tablero:
         return ok
     def colocarLetra(self, coordX, coordY):
         if (self.validarPosicion(self.letraActual, coordX, coordY)):
-            self.selected[coordX][coordY] = True    #Casilla se ocupa
+            self.selected[coordX][coordY] = True    #Marca ocupada la casilla
             tupla=(coordX,coordY)
             self.listaPos.append(tupla)             #Guardo la posicion en una lista.      
             if (self.letraActual=="1erLetra"):
@@ -184,23 +225,44 @@ class Tablero:
             self.liberarLetra(self.boton_actual)
             
     def seleccionarLetra(self, letra):
-        if (self.boton_seleccionado==False):
+        if (self.boton_seleccionado==False and self.boton_actual!=letra):
             self.boton_seleccionado=True
             self.marcarLetra(letra)
             self.boton_actual=letra
-        else:
+        elif (self.boton_seleccionado==True and self.boton_actual==letra):
             self.boton_seleccionado=False
             self.desmarcarLetra(letra)
-            #self.boton_actual=None
+            self.boton_actual=None
     def liberarLetra(self, letra):
         self.boton_seleccionado=False
         self.desmarcarLetra(letra)
         self.tablero.FindElement(letra).Update(" ")   
-        #self.boton_actual=None
+        self.boton_actual=None
          
     def funcion(self, event, values):
         if 'tipo' == 'Exit' or event is None:
-            self.cortaTodo=True
+            self.cortaTodo=True 
+        elif event=='__TIMEOUT__':
+            # acualizar tiempo
+            FinJuego = self.r.finJuego()
+            if (FinJuego == True):
+                # if(r.una==0):
+                #   print("Hola")
+                #print("hola")
+                if (self.r.una == 1):
+                    self.tablero['reloj'].update(
+                        'Tiempo: {:02d}:{:02d}.{:02d}'.format((self.r.counter // 100) // 60, (self.r.counter // 100) % 60,
+                                                      self.r.counter % 100))
+                    #print("chau")
+            if (FinJuego == False):
+                # print("entre al else")
+                self.r.una = 0;
+                self.tablero['reloj'].update(
+                    'Tiempo: 01:00:00')
+
+            self.r.counter += 1
+            #self.r.TurnoDeComputadora()
+            j = FinJuego;   
         else: 
             if (event != "_GRAPH_"):
                 #significa q presione algun boton. 
@@ -220,6 +282,6 @@ tablero.dibujarTablero(tablero.matriz,lista_letras)
 while (True):
     if (tablero.cortaTodo):
         break
-    event, values=tablero.tablero.Read()
+    event, values=tablero.tablero.read(timeout=10)
     tablero.funcion(event,values)
     print(tablero.listaPos)

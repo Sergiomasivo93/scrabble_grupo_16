@@ -1,5 +1,7 @@
 import PySimpleGUI as sg
-import modulos.tablero as tabla
+#import tablero_fran as tabla
+from tablero import Tablero as ta
+
 
 tab1_layout =  [[sg.T('Haga click en la pestaña Configuracion si decea modificar lo siguiente:')],
                 [sg.T('\t Tiempo. \n \t Nivel. \n \t Puntaje para las letras. \n')],
@@ -96,6 +98,10 @@ layout = [
 
 window = sg.Window('Everything bagel', layout, default_element_size=(40, 1), grab_anywhere=False)
 
+
+
+
+
 while True:
     event, values = window.read()
     print(f"Evento: {event}")
@@ -104,8 +110,7 @@ while True:
     if event is None or event == 'Salir':           # always,  always give a way out!
         break
     if event == 'Comenzar':
-        tabla.ejecutar_tablero()
-
+       break 
     if event in (None, 'Exit'):
         break
     if event in ('Modificar'):
