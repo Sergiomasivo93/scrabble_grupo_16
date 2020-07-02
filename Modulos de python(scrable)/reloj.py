@@ -12,8 +12,7 @@ class Reloj():
     una = 1
     def dameLayout(self):
         layout = [
-            [sg.Text(' ', size=(8, 2), font=('Helvetica', 20), justification='center', key='reloj')],#pad=(215, 0))],
-            [sg.Text(size=(15,1), key='-OUTPUT-')] ]
+            sg.Text(' ', size=(28, 2), font=('Helvetica', 16), justification='center', key='reloj')]
 
         return layout;
 
