@@ -280,6 +280,8 @@ class Tablero:
         self.dibujarTablero(self.matriz,lista_letras)
         while (True):
             if (self.cortaTodo):
+                self.cortaTodo = False
+                self.r.counter = 0
                 break
             event, values=self.tablero.read(timeout=10)
             self.funcion(event,values)
@@ -291,6 +293,8 @@ if __name__ == "__main__":
     tablero.dibujarTablero(tablero.matriz,lista_letras)
     while (True):
         if (tablero.cortaTodo):
+            tablero.cortaTodo = False
+            tablero.r.counter = 0
             break
         event, values=tablero.tablero.read(timeout=10)
         tablero.funcion(event,values)
