@@ -274,14 +274,24 @@ class Tablero:
                     coordX=mouse[0] // self.tam_celda
                     coordY=mouse[1] // self.tam_celda
                     self.colocarLetra(coordX, coordY)
-#Pruebas de tablero
 
-tablero = Tablero()
-lista_letras=["A","E","I","O","U"]
-tablero.dibujarTablero(tablero.matriz,lista_letras)
-while (True):
-    if (tablero.cortaTodo):
-        break
-    event, values=tablero.tablero.read(timeout=10)
-    tablero.funcion(event,values)
-    print(tablero.listaPos)
+    def correrTablero(self):  
+        lista_letras=["A","E","I","O","U"]
+        self.dibujarTablero(self.matriz,lista_letras)
+        while (True):
+            if (self.cortaTodo):
+                break
+            event, values=self.tablero.read(timeout=10)
+            self.funcion(event,values)
+            print(self.listaPos)
+#Pruebas de tablero
+if __name__ == "__main__":
+    tablero = Tablero()
+    lista_letras=["A","E","I","O","U"]
+    tablero.dibujarTablero(tablero.matriz,lista_letras)
+    while (True):
+        if (tablero.cortaTodo):
+            break
+        event, values=tablero.tablero.read(timeout=10)
+        tablero.funcion(event,values)
+        print(tablero.listaPos)

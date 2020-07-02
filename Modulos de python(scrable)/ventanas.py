@@ -1,7 +1,9 @@
 import PySimpleGUI as sg
 #import tablero_fran as tabla
-from tablero import Tablero as ta
 
+from tablero import Tablero
+
+ta = Tablero()
 
 tab1_layout =  [[sg.T('Haga click en la pestaña Configuracion si decea modificar lo siguiente:')],
                 [sg.T('\t Tiempo. \n \t Nivel. \n \t Puntaje para las letras. \n')],
@@ -110,7 +112,7 @@ while True:
     if event is None or event == 'Salir':           # always,  always give a way out!
         break
     if event == 'Comenzar':
-       break 
+       ta.correrTablero()
     if event in (None, 'Exit'):
         break
     if event in ('Modificar'):
