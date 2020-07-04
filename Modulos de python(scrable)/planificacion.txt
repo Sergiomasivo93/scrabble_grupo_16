@@ -1,0 +1,40 @@
+Tenemos hecho:
+Logica de la bolsa
+Logica del estante
+Jugador (coneccion con el estante)
+Logica de la palabra
+Logica del reloj
+Ventanas (faltan cosas)
+Tablero (logica para agregar una letra, modificarlo)
+
+Que es lo que falta:
+Funcionalidad de validar una palabra en el tablero (visualmente y coneccion con el juego)
+------------------------Turnos--------------------------------
+Implementar el "pasar de turno"
+Implementar el turno de la computadora
+--------------------------------------------------------------
+------------------------Archivos------------------------------
+Falta el historial (manejo de archivos)
+    3 ventanas una por cada difcultad
+    Consultar si se debe guardar una partida perdida o queda a criterio del programador. 
+Falta guardar la partida actual (manejo de archivo)
+    Guarda lo siguiente:
+    Puntaje
+    Nombre
+    Tiempo
+    Tablero 
+    Cantidad de fichas en mano y bolsa 
+    Turno actual
+Configuracion de la ventana en otro archivo
+Cambiar los casilleros especiales de acuerdo al nivel (podria ser con un archivo).
+-------------------------------------------------------------
+Cambiar el nombre de terminar juego a rendirse e implementar la funcionalidad (pop up, q no se guarden los datos de un sucio perdedor)
+El dibujar tablero lo que hace es dibuja la imagen inicial ()
+Implementar cambiar fichas
+Calculo del puntaje. 
+Muestra del puntaje en la visual. 
+Muestra del Turno en la visual.
+
+
+
+

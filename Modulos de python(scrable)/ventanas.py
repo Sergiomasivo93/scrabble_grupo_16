@@ -2,7 +2,6 @@ import PySimpleGUI as sg
 from tablero import Tablero
 
 ta = Tablero()
-
 class Vista:
     sg.theme('Darkamber')  # declaracion del color
     def __init__(self):
@@ -103,7 +102,7 @@ class Vista:
         for letra in listAux:
             dicPuntaje[letra] = int(puntaje)
 
-    def correr_ventana(self ,juego):
+    def correr_ventana(self, juego):
         while True:
             event, values = self.window.read()
             print(f"Evento: {event}")
@@ -154,6 +153,6 @@ class Vista:
         self.window.close()
 
 #--------------------------Test de la clase vista(ventana)-------------------------------------------
-# v = Vista()
-# v.correr_ventana()
+#v = Vista()
+#v.correr_ventana(j)
 #nota hace falta una forma de que se le puedan pasar datos des jugador desde la vista al modelo y desde el modelo a la vista

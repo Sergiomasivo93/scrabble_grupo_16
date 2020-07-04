@@ -315,7 +315,6 @@ class Tablero:
             self.cortaTodo = True
             print("salir por tocar exit o X")
         elif event == '__TIMEOUT__':
-            # acualizar tiempo
             FinJuego = self.r.finJuego()
             if (FinJuego == True):
                 if (self.r.una == 1):
@@ -323,11 +322,11 @@ class Tablero:
                                                               (self.r.counter // 100) % 60,
                                                               self.r.counter % 100))
             if (FinJuego == False):
-                self.r.una = 0;
+                self.r.una = 0
                 self.tablero['reloj'].update(
                     'Tiempo: 01:00:00')
             self.r.counter += 1
-            j = FinJuego;
+            j = FinJuego
         else:
             if (event != "_GRAPH_"):
                 # significa q presione algun boton.
@@ -351,16 +350,18 @@ class Tablero:
             self.funcion(event, values)
             print(self.listaPos)
 
-# Pruebas de tablero
-# import datetime
-# import time
-# tablero = Tablero()
-# lista_letras = ["A", "E", "I", "O", "U", "w", "y"]
-# tablero.dibujarTablero(tablero.matriz, lista_letras)
-# while (True):
-#     if (tablero.cortaTodo):
-#         break
-#     event, values = tablero.tablero.Read(timeout=10)
-#
-#     tablero.funcion(event, values)
-#     print(tablero.listaPos)
+#Pruebas de tablero
+"""
+import datetime
+import time
+tablero = Tablero()
+lista_letras = ["A", "E", "I", "O", "U", "w", "y"]
+tablero.dibujarTablero(tablero.matriz)
+while (True):
+    if (tablero.cortaTodo):
+        break
+    event, values = tablero.tablero.Read(timeout=10)
+
+    tablero.funcion(event, values)
+    print(tablero.listaPos)
+"""
