@@ -1,5 +1,6 @@
 import PySimpleGUI as sg
-from reloj import Reloj
+from relojprofe import Reloj
+
 
 class Tablero:
     sg.theme('Dark Green 5')  # declaracion del color
@@ -57,7 +58,7 @@ class Tablero:
         """
         self.lista_letras_jugador = [ficha.get_letra() for ficha in dic_estado_modelo['estado_mano_jugador']]
         self.puntaje_fichas_jugador = [ficha.get_puntaje() for ficha in dic_estado_modelo['estado_mano_jugador']]
-        self.lista_letras_pc = [ficha.get_letra() for ficha in dic_estado_modelo['estado_mano_maquina']]
+        self.lista_letras_pc = [ficha.get_puntaje() for ficha in dic_estado_modelo['estado_mano_maquina']]
         self.nombre_jugador = dic_estado_modelo['estado_nombre_jugador']
         self.puntaje_jugador = dic_estado_modelo['estado_puntaje_jugador']
         self.puntaje_maquina = dic_estado_modelo['estado_puntaje_maquina']
@@ -121,11 +122,17 @@ class Tablero:
                     justification='center', pad=(8, 0)) for puntaje in self.puntaje_fichas_jugador]
         fichas_jugador = [boton(texto) for texto in self.lista_letras_jugador]
         # COLUMNA
-        label_player = [ sg.Text('Jugador: {}'.format(self.nombre_jugador), font=('Helvetica', 18), justification='center', key='text')]
-        label_PuntajeJ = [ sg.Text('puntaje: {}'.format(self.puntaje_jugador), font=('Helvetica', 18), justification='center', key='puntaje_jugador')]
-        label_maquina = [sg.Text('Maquina', font=('Helvetica', 18), justification='center')]
+        label_player = [
+            sg.Text('Jugador: {}'.format(self.nombre_jugador), background_color="Teal", font=('Helvetica', 20),
+                    justification='center', key='text')]
+        label_PuntajeJ = [
+            sg.Text('puntaje: {}'.format(self.puntaje_jugador), background_color="Teal", font=('Helvetica', 20),
+                    justification='center', key='puntaje_jugador')]
+        label_maquina = [sg.Text('Maquina', background_color="Teal", font=('Helvetica', 20), justification='center')]
         label_ficha_jugador = [sg.Text('Valor de cada ficha', font=('Helvetica', 12), justification='center')]
-        label_PuntajeM = [ sg.Text('puntaje: {}'.format(self.puntaje_maquina), font=('Helvetica', 18), justification='center', key='puntaje_maquina')]
+        label_PuntajeM = [
+            sg.Text('puntaje: {}'.format(self.puntaje_maquina), background_color="Teal", font=('Helvetica', 20),
+                    justification='center', key='puntaje_maquina')]
         # JUNTO FILAS Y COLUMNAS
         # sg.Button('Comprobar')
         # Colores para el Button
@@ -144,7 +151,7 @@ class Tablero:
         termi = sg.Button('Terminar juego', button_color=('black', statecolor[4]), key='Terminar juego', size=(8, 2),
                           font=("Arial", 12, "bold"), pad=(50, 200))
         col00 = [guaPartida, termi]
-        col01 = self.r.dameLayout()
+        col01 = [self.r.dameLayout()[0][0], self.r.dameLayout()[1][0]]
         # Relojdib = [sg.Text('', size=(8, 2), font=('Helvetica', 20), justification='center', key='reloj')]
         ##################ACA COLOCO EL LAYAOUT DEL RELOJ################################
         col0 = [label_maquina, label_PuntajeM, fichas_pc, col00]
@@ -295,6 +302,7 @@ class Tablero:
             self.liberarLetra(self.boton_actual)
 
     def seleccionarLetra(self, letra):
+        print(letra)
         if (self.boton_seleccionado == False):
             self.boton_seleccionado = True
             self.marcarLetra(letra)
@@ -310,23 +318,27 @@ class Tablero:
         self.tablero.FindElement(letra).Update(" ")
         self.boton_actual = None
 
-    def funcion(self, event, values):
+    def funcion(self, event, values,juego):
+        if  event == 'Guardar partida':
+            juego.guardar_partida(juego)
         if 'tipo' == 'Exit' or event is None:
             self.cortaTodo = True
             print("salir por tocar exit o X")
         elif event == '__TIMEOUT__':
+            # acualizar tiempo
             FinJuego = self.r.finJuego()
             if (FinJuego == True):
                 if (self.r.una == 1):
-                    self.tablero['reloj'].update('Tiempo:    {:02d}:{:02d}.{:02d}'.format((self.r.counter // 100) // 60,
+                    self.tablero['reloj'].update(
+                        'Tiempo: {:02d}:{:02d}.{:02d}'.format((self.r.counter // 100) // 60,
                                                               (self.r.counter // 100) % 60,
                                                               self.r.counter % 100))
             if (FinJuego == False):
-                self.r.una = 0
+                self.r.una = 0;
                 self.tablero['reloj'].update(
                     'Tiempo: 01:00:00')
             self.r.counter += 1
-            j = FinJuego
+            j = FinJuego;
         else:
             if (event != "_GRAPH_"):
                 # significa q presione algun boton.
@@ -339,7 +351,7 @@ class Tablero:
                     coordY = mouse[1] // self.tam_celda
                     self.colocarLetra(coordX, coordY)
 
-    def ejecutarTablero(self):
+    def ejecutarTablero(self,juego):
         self.dibujarTablero(self.matriz)
         while True:
             if self.cortaTodo:  # me voy del juego (cada vez que me voy , cuando vuelvo es una nueva partida)
@@ -347,21 +359,19 @@ class Tablero:
                 self.r.counter = 0
                 break
             event, values = self.tablero.Read(timeout=10)
-            self.funcion(event, values)
+            self.funcion(event, values,juego)
             print(self.listaPos)
 
-#Pruebas de tablero
-"""
-import datetime
-import time
-tablero = Tablero()
-lista_letras = ["A", "E", "I", "O", "U", "w", "y"]
-tablero.dibujarTablero(tablero.matriz)
-while (True):
-    if (tablero.cortaTodo):
-        break
-    event, values = tablero.tablero.Read(timeout=10)
-
-    tablero.funcion(event, values)
-    print(tablero.listaPos)
-"""
+# Pruebas de tablero
+# import datetime
+# import time
+# tablero = Tablero()
+# lista_letras = ["A", "E", "I", "O", "U", "w", "y"]
+# tablero.dibujarTablero(tablero.matriz, lista_letras)
+# while (True):
+#     if (tablero.cortaTodo):
+#         break
+#     event, values = tablero.tablero.Read(timeout=10)
+#
+#     tablero.funcion(event, values)
+#     print(tablero.listaPos)

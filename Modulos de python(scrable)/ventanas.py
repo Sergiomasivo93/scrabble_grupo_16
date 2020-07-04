@@ -1,9 +1,11 @@
 import PySimpleGUI as sg
 from tablero import Tablero
-
+from juego import Juego
 ta = Tablero()
+
+
 class Vista:
-    sg.theme('Darkamber')  # declaracion del color
+    sg.theme('Dark Green 5')  # declaracion del color
     def __init__(self):
         # ----------------------------------------------------------------------------
         # ------------------------ Estructura definicion ---------------------------------
@@ -25,7 +27,7 @@ class Vista:
             [sg.T('Haga click en la pestaña Historial si decea visualizar los puntajes obtenidos durante el juego.')],
             [sg.T('\n Haga click en el boton Comenzar si desea jugar.')],
             [sg.T('\n Antes de comenzar Ingrese su nombre.')],
-            [sg.InputText('',pad=(10,0), size=(10, 1), tooltip='por ejemplo: pepe',key='nombre_jugador'),sg.Button('Establecer',key='Establecer')]
+            [sg.InputText('',pad=(10,0), size=(10, 1), tooltip='por ejemplo: pepe',key='nombre_jugador'),sg.Button('Establecer',key='Establecer'),sg.Button('Cargar partida',key='Cargar')]
         ]
         self.tab2_layout = [
             [sg.Text('Configuracion para el juego', size=(30, 1), justification='center', font=("Helvetica", 25), relief=sg.RELIEF_RIDGE)],
@@ -102,7 +104,7 @@ class Vista:
         for letra in listAux:
             dicPuntaje[letra] = int(puntaje)
 
-    def correr_ventana(self, juego):
+    def correr_ventana(self ,juego):
         while True:
             event, values = self.window.read()
             print(f"Evento: {event}")
@@ -110,12 +112,15 @@ class Vista:
                 break
             if event == 'Establecer':
                 self.nombreJ = values['nombre_jugador']
+                juego = Juego()
                 juego.set_nombre_J(self.nombreJ)
-
+                self.window['Comenzar'].update(disabled=False)
+            if event == 'Cargar':
+                juego = juego.cargar_partida()
                 self.window['Comenzar'].update(disabled=False)
             if event == 'Comenzar':
                 ta.cargar_datos_vista(juego.actualizar_estado())
-                ta.ejecutarTablero()
+                ta.ejecutarTablero(juego)
             if event in (None, 'Exit'):
                 break
             if event in ('Modificar'):
@@ -153,6 +158,6 @@ class Vista:
         self.window.close()
 
 #--------------------------Test de la clase vista(ventana)-------------------------------------------
-#v = Vista()
-#v.correr_ventana(j)
+# v = Vista()
+# v.correr_ventana()
 #nota hace falta una forma de que se le puedan pasar datos des jugador desde la vista al modelo y desde el modelo a la vista
